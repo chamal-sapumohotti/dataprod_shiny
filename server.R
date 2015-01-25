@@ -1,23 +1,22 @@
 
 library(shiny)
-library(randomForest)
-
 
 shinyServer(
   function(input, output) {
 
-    load("model")
     
     prediction <- reactive({            
-        sl <- as.numeric(input$sepalLength)
-        sw <- as.numeric(input$sepalWidth)
         pl <- as.numeric(input$petalLength)
         pw <- as.numeric(input$petalWidth)
         
-        query <- data.frame(Sepal.Length=sl, Sepal.Width = sw, Petal.Length=pl, Petal.Width=pw)
+        if(pl < 2.45)
+            pred <- "setosa"
+        else if(pl >=2.45 && pw < 1.75)
+            pred <- "versicolor"
+        else
+            pred<- "viginica"
         
-        pred<-as.character(predict(finalModel, query, type="response"))
-        as.character(pred)
+        pred
     })
     
     output$prediction <- renderText(prediction())
